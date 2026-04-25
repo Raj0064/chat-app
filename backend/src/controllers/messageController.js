@@ -30,6 +30,7 @@ export const sendMessage = async (req, res) => {
     // Emit via socket
     req.io.to(chatId).emit("receive_message", message);
 
+
     return res.status(201).json({
       success: true,
       message,

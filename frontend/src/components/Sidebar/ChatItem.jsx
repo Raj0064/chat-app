@@ -1,18 +1,33 @@
 import { Card } from "@/components/ui/card";
 import { useChat } from "@/context/ChatContext";
 
-export default function ChatItem({ name, chat }) {
+export default function ChatItem({ chat, name, isOnline }) {
   const { selectedChat, setSelectedChat } = useChat();
 
-  const isSelected = selectedChat?._id === chat._id;
+  const active = selectedChat?._id === chat._id;
 
   return (
     <Card
-      className={`p-3 cursor-pointer transition ${isSelected ? "bg-primary text-primary-foreground" : "hover:bg-muted"
-        }`}
       onClick={() => setSelectedChat(chat)}
+      className={`p-3 cursor-pointer ${active ? "bg-primary text-white" : "hover:bg-muted"
+        }`}
     >
-      {name}
+
+      {/* FLEX CONTAINER FIX */}
+      <div className="flex items-center justify-between w-full">
+
+        {/* NAME */}
+        <span className="truncate">{name}</span>
+
+        {/* DOT */}
+        {!chat.isGroupChat && isOnline && (
+          <span className="shrink-0 ml-2">
+            <span className="block w-2 h-2 bg-green-500 rounded-full" />
+          </span>
+        )}
+
+      </div>
+
     </Card>
   );
 }

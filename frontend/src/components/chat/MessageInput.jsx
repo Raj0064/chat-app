@@ -1,43 +1,60 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useChat } from "@/context/ChatContext";
 import API from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import socket from "@/lib/socket";
 
-export default function MessageInput() {
+export default function MessageInput({ setMessages }) {
   const [text, setText] = useState("");
-  const {selectedChat}=useChat();
-  const {user}=useAuth();
+  const { selectedChat } = useChat();
+  const { user } = useAuth();
 
-const handleSend=async()=>{
-  if(!text.trim()|| !selectedChat) return;
+  const typingTimeout = useRef(null);
 
-  try {
-    const messageData={
-      chatId:selectedChat._id,
-      content:text,
-      sender:user._id,
-    }
-    console.log(messageData);
+  const handleTyping = (e) => {
+    setText(e.target.value);
 
-    //Send data to backend
-    await API.post("/message/send",messageData)
+    socket.emit("typing", {
+      chatId: selectedChat._id,
+      user,
+    });
+
+    clearTimeout(typingTimeout.current);
+
+    typingTimeout.current = setTimeout(() => {
+      socket.emit("stop_typing", selectedChat._id);
+    }, 800);
+  };
+
+  const handleSend = async () => {
+    if (!text.trim()) return;
+
+    const res = await API.post("/message/send", {
+      chatId: selectedChat._id,
+      content: text,
+    });
+
+    setMessages((prev) => [...prev, res.data.message]);
+
+    socket.emit("send_message", res.data.message);
+
     setText("");
-  } catch (error) {
-    console.log(error);
-  }
-}
-  
+    socket.emit("stop_typing", selectedChat._id);
+  };
+
   return (
-    <div className="p-4 flex gap-2 ">
+    <div className="p-4 flex gap-2">
       <Input
         value={text}
-        onChange={(e)=>setText(e.target.value)}
+        onChange={handleTyping}
         placeholder="Type message..."
       />
-      <Button onClick={handleSend}>Send</Button>
+
+      <Button onClick={handleSend}>
+        Send
+      </Button>
     </div>
   );
 }
