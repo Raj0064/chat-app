@@ -8,20 +8,25 @@ const ChatSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
-    isGroup: {
+    isGroupChat: {
       type: Boolean,
       default: false,
     },
-    name: {
+    chatName: {
       type: String,
       default: null,
     },
-    admin: {
+     groupAdmin: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+    },
+    latestMessage: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Message",
     },
   },
   { timestamps: true }
 );
 
-export const Chat = mongoose.model("Chat", ChatSchema);
+const Chat = mongoose.model("Chat", ChatSchema);
+export default Chat;

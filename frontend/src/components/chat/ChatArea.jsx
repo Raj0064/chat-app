@@ -4,6 +4,7 @@ import MessageInput from "./MessageInput";
 import { useEffect } from "react";
 import socket from "@/lib/socket";
 import { useChat } from "@/context/ChatContext";
+import NoChat from "./NoChat";
 
 export default function ChatArea() {
   const {selectedChat}=useChat();
@@ -23,9 +24,15 @@ export default function ChatArea() {
 
   return (
     <div className="flex-1 flex flex-col">
-      <ChatHeader />
+
+      {
+        selectedChat ? (<> <ChatHeader />
       <MessageList />
-      <MessageInput />
+      <MessageInput /></>):
+
+      <NoChat/>
+      }
+     
     </div>
   );
 }

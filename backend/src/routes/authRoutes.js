@@ -1,13 +1,18 @@
 import express from "express";
-const router=express.Router();
+const router = express.Router();
 
-import {register, Login, LogOut} from "../controllers/authController.js";
+import {
+  register,
+  login,
+  logout,
+  checkAuth,
+} from "../controllers/authController.js";
+
 import { isAuthenticated } from "../middlewares/isAuthenticated.js";
-import { checkAuth } from "../controllers/authController.js";
 
-router.post("/register",register);
-router.post("/login",Login);
-router.get("/logout",LogOut);
+router.post("/register", register);
+router.post("/login", login);
+router.post("/logout", logout);
 
 router.get("/me", isAuthenticated, checkAuth);
 

@@ -24,7 +24,6 @@ const handleSend=async()=>{
 
     //Send data to backend
     await API.post("/message/send",messageData)
-
     setText("");
   } catch (error) {
     console.log(error);

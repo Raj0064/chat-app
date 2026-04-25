@@ -17,7 +17,8 @@ const [messages,setMessages]=useState([]);
     const fetchMessages = async () => {
       try {
         const res = await API.get(`/message/${selectedChat._id}`);
-        setMessages(res.data);
+        console.log(res);
+        setMessages(res?.data.messages||[]);
       } catch (err) {
         console.log(err);
       }
@@ -45,7 +46,7 @@ const [messages,setMessages]=useState([]);
   return (
     <div className="flex-1 p-4 overflow-y-auto space-y-2">
       {
-        messages.map((mssg)=>(
+        messages?.map((mssg)=>(
           <MessageBubble key={mssg._id} text={mssg.content} own={mssg.sender === user?._id || mssg.sender?._id === user?._id}/>
         ))
       }

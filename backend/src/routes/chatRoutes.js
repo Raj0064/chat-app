@@ -1,12 +1,18 @@
 import express from "express";
-const router=express.Router();
+const router = express.Router();
 
-import {createChat, createGroupChat, getChats} from"../controllers/chatController.js";
-import {isAuthenticated } from "../middlewares/isAuthenticated.js";
+import {
+  accessChat,
+  createGroupChat,
+  getChats,
+} from "../controllers/chatController.js";
+
+import { isAuthenticated } from "../middlewares/isAuthenticated.js";
 
 router.use(isAuthenticated);
-router.get("/",getChats)
-router.post("/create",createChat);
+
+router.get("/", getChats);
+router.post("/", accessChat); // 1:1 chat
 router.post("/group", createGroupChat);
 
 export default router;

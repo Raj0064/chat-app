@@ -3,7 +3,7 @@ import API from "@/lib/api";
 
 export default function Logout() {
   const handleLogout = async () => {
-    await API.get("/auth/logout");
+    await API.post("/auth/logout");
     window.location.href = "/login";
   };
 
